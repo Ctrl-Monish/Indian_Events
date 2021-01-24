@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "284229211695",
+    "project_id": "events-dbb36",
+    "storage_bucket": "events-dbb36.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:284229211695:android:074508f8b00a677acad8da",
+        "android_client_info": {
+          "package_name": "com.internship.indianevents"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "284229211695-i6st28euja42e9g9tdfrjd2r3na5jhoo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDR6F4147gV8zhv5SPaP6V6hsMtHbZmfnY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "284229211695-i6st28euja42e9g9tdfrjd2r3na5jhoo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

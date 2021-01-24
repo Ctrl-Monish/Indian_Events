@@ -27,8 +27,8 @@ public class RecyclerView_Adapter extends FirebaseRecyclerAdapter<EventsModel, R
 
     @Override
     protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull EventsModel model) {
-        holder.yearView.setText(model.date);
-        holder.textView.setText(model.text);
+        holder.yearView.setText(model.getDate());
+        holder.textView.setText(model.getText());
         Glide.with(holder.imageView.getContext()).load(model.getPurl()).into(holder.imageView);
     }
 

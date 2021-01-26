@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -21,12 +22,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     TextView edate;
     DatePickerDialog.OnDateSetListener setListener;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity{
     ViewPager viewPager;
     Fragment_Manager fragment_manager;
 
+    public static String dateOfEvent = "10";
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -77,10 +79,7 @@ public class MainActivity extends AppCompatActivity{
 
         //date picker
         edate = findViewById(R.id.date_text);
-        Calendar calendar = Calendar.getInstance();
-        final int year = calendar.get(Calendar.YEAR);
-        final int month = calendar.get(Calendar.MONTH);
-        final int day = calendar.get(Calendar.DAY_OF_MONTH);
+
 
 
         //navigation drawer and toolbar
@@ -106,8 +105,8 @@ public class MainActivity extends AppCompatActivity{
                     case R.id.calender:
                         Toast.makeText(getApplicationContext(),"Calender", Toast.LENGTH_LONG).show();
                         drawerLayout.closeDrawer(GravityCompat.START);
-                        DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this,setListener,year,month,day);
-                        datePickerDialog.show();
+                        DialogFragment datepicker = new DatePicker_Fragment();
+                        datepicker.show(getSupportFragmentManager(), "Date Picker");
                         break;
                     case R.id.view:
                         Toast.makeText(getApplicationContext(),"View", Toast.LENGTH_LONG).show();
@@ -122,30 +121,21 @@ public class MainActivity extends AppCompatActivity{
                 return true;
             }
         });
+    }
 
-        setListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month=month+1;
-                String date = dayOfMonth+"/"+month+"/"+year;
-                edate.setText(date);
-            }
-        };
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-        edate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        month=month+1;
-                        String date = dayOfMonth+"/"+month+"/"+year;
-                        edate.setText(date);
-                    }
-                }, year, month, day);
-                datePickerDialog.show();
-            }
-        });
+        Integer x = new Integer(dayOfMonth);
+        dateOfEvent = x.toString();
+        getSupportFragmentManager().beginTransaction().detach(fragment_manager.getItem(1)).attach(fragment_manager.getItem(1)).commit();
+
+        String date = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
+        edate.setText(date);
     }
 
 }

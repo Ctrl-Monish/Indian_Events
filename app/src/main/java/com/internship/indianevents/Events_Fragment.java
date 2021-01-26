@@ -40,7 +40,7 @@ public class Events_Fragment extends Fragment {
 
         FirebaseRecyclerOptions<EventsModel> options =
                 new FirebaseRecyclerOptions.Builder<EventsModel>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("January").child("24").child("Events"), EventsModel.class)
+                        .setQuery(FirebaseDatabase.getInstance().getReference().child("January").child(MainActivity.dateOfEvent).child("Events"), EventsModel.class)
                         .build();
 
         recyclerView_adapter = new RecyclerView_Adapter(options);

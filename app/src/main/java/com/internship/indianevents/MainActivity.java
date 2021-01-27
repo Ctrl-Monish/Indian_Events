@@ -10,12 +10,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.DatePickerDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -37,12 +38,12 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     ActionBarDrawerToggle toggle;
     DrawerLayout drawerLayout;
 
-    //tablayout
-    TabLayout tabLayout;
-    ViewPager viewPager;
+    //tab layout
     Fragment_Manager fragment_manager;
+    TabLayout tabLayout;
+    ViewPager2 viewPager;
 
-    public static String dateOfEvent = "10";
+    public static String dateOfEvent = "26";
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -53,34 +54,34 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
         //tab layout
         tabLayout = findViewById(R.id.tab_layout);
+        fragment_manager = new Fragment_Manager(this);
         viewPager = findViewById(R.id.view_pager);
 
         //adapter setup
-        fragment_manager = new Fragment_Manager(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,tabLayout.getTabCount());
         viewPager.setAdapter(fragment_manager);
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(
+                tabLayout, viewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                switch(position) {
+                    case 0:
+                        tab.setText("Events");
+                        break;
+                    case 1:
+                        tab.setText("Births");
+                        break;
+                    case 2:
+                        tab.setText("Deaths");
+                        break;
+                    default:
+                }
             }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        }
+        );
+        tabLayoutMediator.attach();
 
         //date picker
         edate = findViewById(R.id.date_text);
-
-
 
         //navigation drawer and toolbar
         Toolbar toolbar = findViewById(R.id.app_bar);
@@ -129,10 +130,10 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
         Integer x = new Integer(dayOfMonth);
         dateOfEvent = x.toString();
-        getSupportFragmentManager().beginTransaction().detach(fragment_manager.getItem(1)).attach(fragment_manager.getItem(1)).commit();
+        fragment_manager.notifyDataSetChanged();
+        viewPager.setAdapter(fragment_manager);
 
         String date = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
         edate.setText(date);
